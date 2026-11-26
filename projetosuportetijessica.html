@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto Avaliativo - Suporte de TI [T1]</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #2563eb;
+            --secondary: #0f172a;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #334155;
+            --border: #cbd5e1;
+            --success: #16a34a;
+            --warning: #d97706;
+            --danger: #dc2626;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.3rem;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .badge-p1 {
+            background-color: var(--danger);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            vertical-align: middle;
+            margin-left: 8px;
+        }
+
+        .badge-ok {
+            background-color: var(--success);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .badge-warn {
+            background-color: var(--warning);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        nav {
+            background-color: var(--card);
+            display: flex;
+            flex-wrap: wrap;
+            border-bottom: 2px solid var(--border);
+            padding: 0 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 1rem 1.2rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            background-color: #f8fafc;
+            color: var(--primary-light);
+        }
+
+        .tab-btn.active {
+            color: var(--primary-light);
+            border-bottom: 3px solid var(--primary-light);
+        }
+
+        main {
+            max-width: 1150px;
+            margin: 1.5rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .tab-content {
+            display: none;
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            animation: fadeIn 0.25s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: var(--primary);
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.2rem;
+            font-size: 1.35rem;
+        }
+
+        h3 {
+            color: var(--secondary);
+            margin: 1.3rem 0 0.6rem 0;
+            font-size: 1.1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.92rem;
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 0.75rem;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        .field-box {
+            background-color: #f8fafc;
+            border-left: 4px solid var(--primary-light);
+            padding: 1rem 1.2rem;
+            margin-bottom: 1rem;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .field-title {
+            font-weight: 700;
+            color: var(--secondary);
+            display: block;
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        pre {
+            background-color: #0f172a;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.88rem;
+            margin: 0.6rem 0;
+        }
+
+        .log-err { color: #f87171; }
+        .log-ok { color: #4ade80; }
+        .log-warn { color: #fbbf24; }
+
+        .msg-card {
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background-color: #fafafa;
+        }
+
+        .msg-header {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        li {
+            margin-bottom: 0.4rem;
+        }
+
+        .alert-info {
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+            padding: 0.9rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.92rem;
+        }
+
+        .report-meta li {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        @media print {
+            nav { display: none; }
+            .tab-content { display: block !important; box-shadow: none; page-break-after: always; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>SCTEC Aperfeiçoar - Suporte de TI [T1] | Projeto Avaliativo - Aluna Jéssica Carrilho<span class="badge-p1">INC-2026-0841 (P1)</span></h1>
+    <p><strong>Cenário 01:</strong> Aplicação Web – Tela branca após o deploy (Portal de Pedidos) | <strong>Status:</strong> <span class="badge-ok">Resolvido / Validado</span></p>
+</header>
+
+<nav>
+    <button class="tab-btn active" onclick="openTab(event, 'doc')">1. Documentação do Projeto</button>
+    <button class="tab-btn" onclick="openTab(event, 'atendimento')">2. Atendimento</button>
+    <button class="tab-btn" onclick="openTab(event, 'evidencias')">3. Evidências</button>
+    <button class="tab-btn" onclick="openTab(event, 'comunicacao')">4. Comunicação</button>
+    <button class="tab-btn" onclick="openTab(event, 'solucao')">5. Solução e Conhecimento</button>
+    <button class="tab-btn" onclick="openTab(event, 'relatorio')">6. Relatório</button>
+</nav>
+
+<main>
+
+    <!-- ABA 1: DOCUMENTAÇÃO DO PROJETO -->
+    <section id="doc" class="tab-content active">
+        <h2>1. Leitura Orientada do Contexto, Regras e Lacunas</h2>
+        <div class="alert-info">
+            <strong>Regra de Honestidade Técnica e Segurança:</strong> Todos os dados deste projeto são sintéticos e sanitizados. Informações ausentes na documentação inicial estão registradas explicitamente como pendentes.
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Tema</th>
+                    <th>Fatos Confirmados (Pacote / Cenário)</th>
+                    <th>Efeito Prático no Atendimento</th>
+                    <th>Lacunas / Dúvidas Pendentes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Serviço</strong></td>
+                    <td>Portal de Pedidos Web (aplicação crítica usada pela área Comercial para cadastro e faturamento de pedidos).</td>
+                    <td>Define impacto alto: paralisação impede faturamento e entrada de pedidos.</td>
+                    <td><strong>Pendente:</strong> ausência de métricas financeiras exatas por hora de indisponibilidade para estimativa de prejuízo.</td>
+                </tr>
+                <tr>
+                    <td><strong>Ambiente</strong></td>
+                    <td>Aplicação web SPA. Sofreu deploy noturno para a versão <code>v3.2.0</code> às 23h30.</td>
+                    <td>Forte correlação temporal entre a publicação noturna e o sintoma matinal.</td>
+                    <td><strong>Pendente:</strong> ausência de informação sobre o uso de CDN externa ou cache de borda separado do servidor web.</td>
+                </tr>
+                <tr>
+                    <td><strong>Operação</strong></td>
+                    <td>Suporte estruturado em N1 (triagem), N2 (sustentação/infra) e N3 (engenharia).</td>
+                    <td>Organiza filas, responsabilidades e evita ações duplicadas.</td>
+                    <td><strong>Pendente:</strong> qual ferramenta de CI/CD realiza a publicação automática (sem acesso ao pipeline).</td>
+                </tr>
+                <tr>
+                    <td><strong>Alçada</strong></td>
+                    <td><strong>N1:</strong> atua apenas na camada cliente/triagem (testa navegadores, limpa cache, inspeciona DevTools). <strong>Não</strong> acessa servidores. <strong>N2:</strong> consulta logs do servidor e executa rollback autorizado.</td>
+                    <td>Garante governança: N1 não tenta reiniciar servidores nem alterar arquivos de produção.</td>
+                    <td><strong>Pendente:</strong> se o N1 possui acesso de leitura ao painel APM ou apenas ao sistema de tickets.</td>
+                </tr>
+                <tr>
+                    <td><strong>Escalonamento</strong></td>
+                    <td>Gatilho para N2: falha confirmada no lado da aplicação/deploy (não isolada a cache local).</td>
+                    <td>Exige handoff completo com evidências do navegador, testes já realizados e escopo de afetados.</td>
+                    <td><strong>Pendente:</strong> quem é o aprovador de plantão para mudanças emergenciais.</td>
+                </tr>
+                <tr>
+                    <td><strong>Pressupostos</strong></td>
+                    <td>Existência da versão anterior (<code>v3.1.4</code>) íntegra e disponível para reversão imediata.</td>
+                    <td>Viabiliza o rollback como medida de contorno rápida.</td>
+                    <td>Pressuposto explícito (confirmado durante o atendimento).</td>
+                </tr>
+                <tr>
+                    <td><strong>Segurança</strong></td>
+                    <td>Proibida exposição de credenciais, tokens, IPs reais ou dados pessoais.</td>
+                    <td>Todas as evidências e identificadores (ex.: <code>USR-COM-014</code>) são sanitizados/anonimizados.</td>
+                    <td>—</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- ABA 2: ATENDIMENTO -->
+    <section id="atendimento" class="tab-content">
+        <h2>2. Registro Completo de Atendimento</h2>
+
+        <div class="field-box">
+            <span class="field-title">Caso Escolhido / Justificativa da Escolha / Contexto do Serviço</span>
+            <strong>Cenário 01 – Aplicação Web: Tela branca após o deploy (Portal de Pedidos).</strong><br>
+            <em>Justificativa:</em> Cenário crítico de sustentação que exige triagem técnica precisa no N1 para distinguir falhas de cache local de erros de código/deploy, coletando evidências no navegador antes de escalonar com segurança para o N2 sem violar limites de alçada.<br>
+            <em>Contexto:</em> Após uma janela de publicação realizada na noite anterior (<code>v3.2.0</code>), operadores da área comercial passaram a relatar tela totalmente em branco ao acessar o Portal de Pedidos no início do expediente.
+        </div>
+
+        <div class="field-box">
+            <span class="field-title">Ticket e Solicitante Fictício</span>
+            <strong>Ticket Mestre:</strong> <code>INC-2026-0841</code> (com 4 chamados filhos vinculados: <code>INC-2026-0842</code> a <code>0845</code>)<br>
+            <strong>Solicitante:</strong> Operador Comercial 01 (<code>USR-COM-014</code> – dado sanitizado) | <strong>Canal:</strong> Telefone / Portal | <strong>Abertura:</strong> 24/11/2026 às 08h15
+        </div>
+
+        <div class="field-box">
+            <span class="field-title">Sintoma e Comportamento Esperado</span>
+            <strong>Sintoma:</strong> Ao acessar a URL do Portal de Pedidos e autenticar, a tela permanece completamente branca (<code>#FFFFFF</code>), sem renderização de menus, formulários ou mensagens amigáveis de erro.<br>
+            <strong>Comportamento Esperado:</strong> Após o login, o sistema deve carregar o painel principal do Portal de Pedidos em até 3 segundos, permitindo a consulta e emissão de pedidos comerciais.
+        </div>
+
+        <div class="field-box">
+            <span class="field-title">Classificação / Impacto / Urgência / Prioridade</span>
+            <strong>Tipo:</strong> Incidente de Aplicação Web (interrupção não planejada de serviço em produção).<br>
+            <strong>Impacto:</strong> <strong>Alto</strong> — Afeta múltiplos usuários da área Comercial (18 operadores confirmados em 2 regionais), paralisando o faturamento e a entrada de pedidos.<br>
+            <strong>Urgência:</strong> <strong>Alta</strong> — Ocorre em horário comercial de pico e não há sistema contingencial manual para digitação de pedidos.<br>
+            <strong>Prioridade:</strong> <strong>P1 (Crítica)</strong> — Justificada pela matriz Impacto Alto × Urgência Alta em serviço crítico de receita (SLA de resposta: 15 min; SLA de contorno: 2h).
+        </div>
+
+        <div class="field-box">
+            <span class="field-title">Limites de Autorização (Alçada)</span>
+            <strong>N1 (Analista de Suporte):</strong> Autorizado a entrevistar usuários, validar conectividade, testar em abas anônimas/outros navegadores, limpar cache do navegador do cliente, inspecionar DevTools (Console/Network) e documentar o ticket. <em>Proibido de acessar servidores de aplicação, alterar configurações de rede/CDN ou executar deploy/rollback.</em><br>
+            <strong>N2 (Sustentação de Aplicações):</strong> Autorizado a consultar logs do servidor web/aplicação, validar pipeline de deploy e executar rollback controlado mediante aprovação.<br>
+            <strong>N3 (Engenharia de Software):</strong> Autorizado a depurar o código-fonte, corrigir o bundle JavaScript e publicar hotfix em janela aprovada.
+        </div>
+
+        <h3>Linha do Tempo do Atendimento</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Horário</th>
+                    <th>Nível</th>
+                    <th>Ação Executada</th>
+                    <th>Resultado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>08h15</td>
+                    <td>N1</td>
+                    <td>Abertura do chamado <code>INC-2026-0841</code> pelo usuário <code>USR-COM-014</code> e aplicação das 4 perguntas diagnósticas.</td>
+                    <td>Identificados 18 usuários afetados na área Comercial após deploy noturno.</td>
+                </tr>
+                <tr>
+                    <td>08h22</td>
+                    <td>N1</td>
+                    <td>Envio de mensagem de abertura ao solicitante com protocolo e prazo de retorno (09h00).</td>
+                    <td>Usuário ciente e orientado a não reiniciar a estação.</td>
+                </tr>
+                <tr>
+                    <td>08h28</td>
+                    <td>N1</td>
+                    <td>Testes em navegador anônimo (Chrome/Edge), limpeza de cache e inspeção no DevTools.</td>
+                    <td>Cache descartado; capturado erro <code>404</code> e <code>Uncaught TypeError</code> no Console.</td>
+                </tr>
+                <tr>
+                    <td>08h35</td>
+                    <td>N1</td>
+                    <td>Classificação P1, vinculação de 4 tickets filhos, handoff estruturado ao N2 e comunicado de atualização aos usuários afetados.</td>
+                    <td>Escalonamento aceito pelo N2 respeitando rigorosamente a alçada.</td>
+                </tr>
+                <tr>
+                    <td>08h42</td>
+                    <td>N2</td>
+                    <td>Análise dos logs do servidor web Nginx e verificação do diretório de publicação <code>v3.2.0</code>.</td>
+                    <td>Causa imediata confirmada: arquivo <code>env-config.js</code> omitido no pacote de build.</td>
+                </tr>
+                <tr>
+                    <td>08h55</td>
+                    <td>N2</td>
+                    <td>Aprovação emergencial do Gestor de Mudanças e execução de rollback controlado para <code>v3.1.4</code>.</td>
+                    <td>Serviço estabilizado (medida de contorno aplicada em 40 min desde a abertura).</td>
+                </tr>
+                <tr>
+                    <td>09h05</td>
+                    <td>N2 → N1</td>
+                    <td>Validação técnica HTTP 200 nos arquivos estáticos e ausência de erros no console; devolução ao N1 para validação com usuários.</td>
+                    <td>Portal carregando normalmente em ambiente de produção.</td>
+                </tr>
+                <tr>
+                    <td>09h12</td>
+                    <td>N1</td>
+                    <td>Teste funcional junto ao solicitante <code>USR-COM-014</code> e outros dois operadores comerciais.</td>
+                    <td>Pedido real emitido com sucesso; normalização confirmada pelos usuários.</td>
+                </tr>
+                <tr>
+                    <td>09h15</td>
+                    <td>N1 / N2</td>
+                    <td>Comunicação de encerramento ao solicitante; N2 registra o problema <code>PRB-2026-019</code> para o N3.</td>
+                    <td>Ticket encerrado com KB-0412 publicado.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Investigação N1: Perguntas Diagnósticas, Hipóteses e Evidências</h3>
+        <ul>
+            <li><strong>Diagnóstico pelas 4 perguntas-chave:</strong>
+                <ol>
+                    <li><em>Navegadores/Dispositivos:</em> Ocorre no Google Chrome (v130) e Microsoft Edge (v130) em estações Windows 11. Funciona apenas em 2 estações que ainda mantinham cache antigo da sessão anterior.</li>
+                    <li><em>Console/Logs:</em> Console exibe <code>Uncaught TypeError: Cannot read properties of undefined (reading 'API_URL')</code> em <code>main.3f8a.js</code> e Network retorna <code>404 Not Found</code> para <code>/assets/env-config.js</code>.</li>
+                    <li><em>Alteração no Deploy / Versão Anterior:</em> Histórico indica deploy da <code>v3.2.0</code> ontem às 23h30; existe versão <code>v3.1.4</code> íntegra no repositório.</li>
+                    <li><em>Escopo de Afetados:</em> 18 usuários da área Comercial (Vendas Internas e Televendas) impedidos de operar.</li>
+                </ol>
+            </li>
+            <li><strong>Hipótese 1 (Cache/sessão local corrompida após atualização):</strong> Testada via abertura em janela anônima (Chrome e Edge) e limpeza forçada de cache. <em>Resultado:</em> Tela branca persistiu (<strong>Evidência 01</strong>). <em>Decisão:</em> <strong>Hipótese descartada.</strong></li>
+            <li><strong>Hipótese 2 (Falha de renderização JavaScript pós-deploy <code>v3.2.0</code>):</strong> Testada via inspeção das abas Console e Network do DevTools. <em>Resultado:</em> Erro <code>Uncaught TypeError</code> no script principal, provocado por resposta <code>404 Not Found</code> em <code>/assets/env-config.js</code> (<strong>Evidência 02</strong>). <em>Decisão:</em> <strong>Hipótese confirmada (confiança: 95%); escalonar para o N2.</strong></li>
+        </ul>
+
+        <div class="field-box">
+            <span class="field-title">Decisão de Resolução ou Escalonamento</span>
+            <strong>Decisão:</strong> Escalonar para o <strong>N2 (Sustentação de Aplicações)</strong>.<br>
+            <strong>Justificativa:</strong> A correção exige intervenção no servidor de aplicação/deploy, fora da alçada do N1. Nenhuma tentativa de reinício de serviço foi feita pelo N1, preservando evidências e governança.
+        </div>
+
+        <div class="field-box">
+            <span class="field-title">Handoff N1 → N2 / Contorno N2 / Handoff N2 → N3</span>
+            <strong>Handoff N1 → N2 (08h35):</strong> Resumo do impacto (tela branca pós-deploy <code>v3.2.0</code> afetando 18 usuários comerciais, P1); testes já realizados (evitando retrabalho); limites de alçada respeitados (N1 não acessou servidores); suspeita técnica fundamentada (95% de confiança) e horário combinado de retorno (09h00).<br>
+            <strong>Contorno N2 (08h55):</strong> Confirmação do erro 404 nos logs do Nginx (<strong>Evidência 04</strong>) e execução de rollback controlado para <code>v3.1.4</code> conforme <code>POP-DEPLOY-04</code>, com validação técnica registrada na <strong>Evidência 05</strong>.<br>
+            <strong>Handoff N2 → N3 (09h15):</strong> Registro do problema <code>PRB-2026-019</code> para a Engenharia corrigir o pipeline de empacotamento da <code>v3.2.0</code>.
+        </div>
+    </section>
+
+    <!-- ABA 3: EVIDÊNCIAS -->
+    <section id="evidencias" class="tab-content">
+        <h2>3. Evidências Técnicas Sanitizadas (Vinculadas às Hipóteses)</h2>
+        <div class="alert-info">
+            Todas as evidências abaixo foram sanitizadas (IPs mascarados, usuários anonimizados e ausência de tokens/credenciais) e vinculadas diretamente às hipóteses investigadas.
+            <strong>Limitação:</strong> por se tratar de ambiente simulado de estudo, logs e métricas de tempo são sintéticos e representam o comportamento esperado do ambiente real, sem acesso direto ao código-fonte do pipeline de CI/CD.
+        </div>
+
+        <h3>Evidência 01 – Teste de Reprodução Local e Descarte de Cache (Vinculada à Hipótese 1)</h3>
+        <pre>[08:28:10] N1_TEST_ENV: Windows 11 Enterprise | Google Chrome v130 (Modo Anônimo) &amp; Edge v130
+[08:28:14] URL: https://pedidos.empresa-ficticia.internal/dashboard
+[08:28:15] RENDER_STATUS: HTTP 200 na casca HTML, porém DOM &lt;div id="root"&gt;&lt;/div&gt; vazio (Tela Branca #FFFFFF).
+[08:28:40] RESULTADO: Falha reproduzida fora do cache local. Hipótese 1 descartada.</pre>
+
+        <h3>Evidência 02 – Captura DevTools: Network e Console do Navegador (Vinculada à Hipótese 2)</h3>
+        <pre>[Network] GET https://pedidos.empresa-ficticia.internal/index.html         -&gt; <span class="log-ok">200 OK (1.2 KB)</span>
+[Network] GET https://pedidos.empresa-ficticia.internal/assets/main.3f8a.js  -&gt; <span class="log-ok">200 OK (412 KB)</span>
+[Network] GET https://pedidos.empresa-ficticia.internal/assets/env-config.js -&gt; <span class="log-err">404 Not Found</span>
+
+[Console] <span class="log-err">Uncaught TypeError: Cannot read properties of undefined (reading 'API_URL')</span>
+    at initApp (main.3f8a.js:1:14892)
+    at main.3f8a.js:1:15010</pre>
+
+        <h3>Evidência 03 – Consolidação de Escopo na Fila de Chamados (Classificação P1)</h3>
+        <pre>TICKET_MESTRE: INC-2026-0841 | PRIORIDADE: P1 (Crítica) | SERVIÇO: Portal de Pedidos
+TICKETS_FILHOS: INC-2026-0842, INC-2026-0843, INC-2026-0844, INC-2026-0845
+ÁREA_AFETADA: Comercial (Vendas Internas e Televendas) | TOTAL_USUÁRIOS: 18 operadores</pre>
+
+        <h3>Evidência 04 – Log Sanitizado do Servidor Web Nginx (Investigação N2)</h3>
+        <pre>2026-11-24T08:14:02 [INFO]  IP: 10.20.XX.XX - "GET /index.html HTTP/1.1" <span class="log-ok">200</span> 1240
+2026-11-24T08:14:03 [ERROR] IP: 10.20.XX.XX - "GET /assets/env-config.js HTTP/1.1" <span class="log-err">404</span> 153
+2026-11-24T08:42:10 [AUDIT] N2_ANALYST_02: Artefato /var/www/portal-v3.2.0/assets/env-config.js ausente no pacote.</pre>
+
+        <h3>Evidência 05 – Validação Técnica Pós-Rollback para v3.1.4 (Encerramento)</h3>
+        <pre>[Network] GET https://pedidos.empresa-ficticia.internal/index.html         -&gt; <span class="log-ok">200 OK</span>
+[Network] GET https://pedidos.empresa-ficticia.internal/assets/env-config.js -&gt; <span class="log-ok">200 OK (480 B)</span>
+[Network] GET https://pedidos.empresa-ficticia.internal/assets/main.9a1b.js  -&gt; <span class="log-ok">200 OK (398 KB)</span>
+[Console] <span class="log-ok">App initialized successfully - Version 3.1.4</span></pre>
+    </section>
+
+    <!-- ABA 4: COMUNICAÇÃO -->
+    <section id="comunicacao" class="tab-content">
+        <h2>4. Plano de Comunicação por Público-Alvo</h2>
+        <p style="margin-bottom: 1rem;">Mensagens estruturadas com linguagem adequada a cada destinatário, informando próximo passo e horário combinado de retorno.</p>
+
+        <div class="msg-card">
+            <div class="msg-header">1. Mensagem de Abertura ao Solicitante (N1 → USR-COM-014 | 08h22)</div>
+            <p>"Olá! Registramos o seu atendimento sob o protocolo <strong>INC-2026-0841</strong> referente à tela em branco no Portal de Pedidos. Já identificamos que o comportamento afeta outros colegas da área comercial e estamos realizando testes técnicos para isolar a falha. Você não precisa reiniciar o computador. Retornaremos com uma atualização até às <strong>09h00</strong>."</p>
+        </div>
+
+        <div class="msg-card">
+            <div class="msg-header">2. Mensagem de Atualização aos Usuários Afetados (N1 → Área Comercial | 08h35)</div>
+            <p>"Atualização do incidente <strong>INC-2026-0841</strong>: Confirmamos que a indisponibilidade do Portal de Pedidos está relacionada à atualização realizada ontem à noite e não ao computador de vocês. Acionamos a equipe especializada (N2) em caráter prioritário para restaurar a versão anterior estável do sistema. Nossa próxima atualização será enviada até às <strong>09h00</strong>."</p>
+        </div>
+
+        <div class="msg-card">
+            <div class="msg-header">3. Mensagem de Handoff Técnico (N1 → N2 | 08h35)</div>
+            <p>"Escalonamento P1 (<strong>INC-2026-0841</strong>): Tela branca pós-login no Portal de Pedidos após deploy noturno (<code>v3.2.0</code>). Afeta 18 usuários da área Comercial. Descartado problema de cache/navegador local (reproduzido em aba anônima no Chrome e Edge). Console exibe <code>Uncaught TypeError</code> em <code>main.3f8a.js</code> devido a erro <code>404 Not Found</code> em <code>/assets/env-config.js</code>. N1 não interveio em servidores. Solicitamos análise dos logs de publicação e avaliação de rollback para <code>v3.1.4</code>. Retorno prometido ao usuário às 09h00."</p>
+        </div>
+
+        <div class="msg-card">
+            <div class="msg-header">4. Mensagem de Encerramento e Validação (N1 → Solicitante USR-COM-014 | 09h15)</div>
+            <p>"Olá! A equipe técnica concluiu o retorno do Portal de Pedidos para a versão estável anterior (<code>v3.1.4</code>), normalizando o acesso. Conforme validamos juntos há pouco, a emissão de pedidos já está funcionando normalmente. Caso note qualquer lentidão, basta responder a este chamado. Estamos encerrando o protocolo <strong>INC-2026-0841</strong>. Bom trabalho!"</p>
+        </div>
+    </section>
+
+    <!-- ABA 5: SOLUÇÃO E CONHECIMENTO -->
+    <section id="solucao" class="tab-content">
+        <h2>5. Contorno, Correção e Artigo de Conhecimento (KCS)</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Tipo de Ação</th>
+                    <th>Descrição Técnica</th>
+                    <th>Responsável</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Contorno (Temporário)</strong></td>
+                    <td>Rollback controlado da versão <code>v3.2.0</code> para a versão estável <code>v3.1.4</code> via <code>POP-DEPLOY-04</code>, restabelecendo a operação comercial (eliminando o sintoma em 40 minutos desde a abertura).</td>
+                    <td>N2 (Sustentação)</td>
+                    <td><span class="badge-ok">Executado (08h55)</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Correção Definitiva</strong></td>
+                    <td>Corrigir o script de build para incluir <code>env-config.js</code>, implementar teste automatizado de integridade de assets (smoke test) antes da liberação do tráfego e reimplantar a <code>v3.2.1</code> em janela de mudança aprovada, com plano de reversão.</td>
+                    <td>N3 (Engenharia)</td>
+                    <td><span class="badge-warn">Proposto (<code>PRB-2026-019</code>)</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Artigo KB-0412: Triagem e Tratamento de "Tela Branca" (Blank Screen) em Aplicações Web Pós-Deploy</h3>
+        <div class="field-box">
+            <span class="field-title">Procedimento Operacional Reutilizável (N1 / N2)</span>
+            <p><strong>Objetivo:</strong> Padronizar o diagnóstico rápido quando uma aplicação web apresenta tela totalmente branca após uma publicação, reduzindo o tempo médio de diagnóstico em incidentes futuros de implantação.</p>
+            <ol style="margin-top: 0.5rem;">
+                <li><strong>Validar escopo e janela:</strong> Confirmar se houve deploy nas últimas 24h e mapear quantos usuários/setores são afetados.</li>
+                <li><strong>Descartar cache local:</strong> Testar em <strong>Janela Anônima</strong> (<code>Ctrl+Shift+N</code>) e em um navegador secundário homologado.</li>
+                <li><strong>Inspecionar DevTools (F12):</strong>
+                    <ul>
+                        <li>Na aba <strong>Console</strong>, buscar erros fatais em vermelho (<code>TypeError</code>, <code>SyntaxError</code>, <code>ChunkLoadError</code>).</li>
+                        <li>Na aba <strong>Network</strong>, recarregar a página e verificar status <code>404</code> ou <code>500</code> nos arquivos <code>.js</code> ou <code>.json</code>.</li>
+                    </ul>
+                </li>
+                <li><strong>Regra de Decisão e Alçada:</strong>
+                    <ul>
+                        <li><em>Se funcionar na aba anônima:</em> Orientar limpeza de cache nos navegadores afetados e encerrar no N1.</li>
+                        <li><em>Se persistir com erros 404/500 de assets:</em> <strong>Não reiniciar servidores nem pedir reinício de máquinas aos usuários.</strong> Coletar evidências sanitizadas do Console/Network e escalonar imediatamente ao N2 avaliando rollback.</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+    </section>
+
+    <!-- ABA 6: RELATÓRIO -->
+    <section id="relatorio" class="tab-content">
+        <h2>RELATÓRIO TÉCNICO DE ATENDIMENTO – PROJETO INTEGRADOR</h2>
+
+        <h3>1. Identificação do projeto e dos autores</h3>
+        <ul class="report-meta">
+            <li>• <strong>Curso:</strong> SCTEC Aperfeiçoar – Suporte de TI [T1]</li>
+            <li>• <strong>Atividade:</strong> Situação de Aprendizagem (Projeto Avaliativo – Módulo Único)</li>
+            <li>• <strong>Autora:</strong> Jéssica Carrilho</li>
+            <li>• <strong>Data:</strong> 25 de novembro de 2026</li>
+        </ul>
+
+        <h3>2. Serviço, cenário e objetivo do atendimento</h3>
+        <p>O atendimento refere-se ao Portal de Pedidos Web, aplicação crítica utilizada pela área Comercial para cadastro e faturamento de pedidos. No Cenário 01, após uma implantação noturna (v3.2.0), diversos usuários passaram a visualizar apenas uma tela branca ao abrir o sistema. O objetivo do atendimento foi diagnosticar a origem da falha dentro das regras de alçada, restabelecer a operação comercial no menor tempo possível e documentar o aprendizado.</p>
+
+        <h3>3. Leitura da documentação e regras aplicáveis</h3>
+        <p>Antes de iniciar as ações técnicas, realizou-se o mapeamento do contexto operacional:</p>
+        <ul>
+            <li><strong>Fatos confirmados:</strong> O serviço é crítico para vendas; houve deploy recente (v3.2.0); o N1 atua apenas na camada cliente/triagem sem acesso a servidores; o N2 possui alçada para consulta de logs de servidor e execução de rollback autorizado.</li>
+            <li><strong>Pressupostos explícitos:</strong> Existência da versão anterior (v3.1.4) disponível para reversão imediata.</li>
+            <li><strong>Lacunas registradas como pendentes:</strong> Ausência de informação inicial sobre o uso de CDN externa e ausência de métricas financeiras exatas por hora de indisponibilidade.</li>
+        </ul>
+
+        <h3>4. Ticket: classificação, impacto, urgência e prioridade</h3>
+        <ul>
+            <li><strong>Ticket Mestre:</strong> INC-2026-0841 (com 4 chamados filhos vinculados).</li>
+            <li><strong>Classificação:</strong> Incidente de Aplicação Web.</li>
+            <li><strong>Impacto:</strong> Alto (18 operadores comerciais paralisados em duas regionais).</li>
+            <li><strong>Urgência:</strong> Alta (horário comercial de pico, sem sistema contingencial manual).</li>
+            <li><strong>Prioridade:</strong> P1 (Crítica), fundamentada na matriz de criticidade do negócio, exigindo resposta imediata e contorno em até 2 horas.</li>
+        </ul>
+
+        <h3>5. Linha do tempo e comunicações</h3>
+        <ul>
+            <li><strong>08h15:</strong> Abertura do chamado pelo usuário USR-COM-014.</li>
+            <li><strong>08h22:</strong> Envio da mensagem de abertura ao solicitante com protocolo e prazo de retorno (09h00).</li>
+            <li><strong>08h28:</strong> Testes em navegador anônimo e captura de erros no DevTools pelo N1.</li>
+            <li><strong>08h35:</strong> Escalonamento (Handoff) estruturado para o N2 e comunicado de atualização aos usuários afetados.</li>
+            <li><strong>08h55:</strong> Execução de rollback controlado pelo N2 para a versão v3.1.4.</li>
+            <li><strong>09h12:</strong> Validação técnica e confirmação de normalização com os usuários.</li>
+            <li><strong>09h15:</strong> Comunicação de encerramento clara, empática e livre de jargões técnicos ao solicitante.</li>
+        </ul>
+
+        <h3>6. Investigação: hipótese → teste → resultado → decisão</h3>
+        <ul>
+            <li><strong>Hipótese 1 (Cache/Sessão local corrompida):</strong> Testada via abertura em aba anônima (Chrome e Edge) e limpeza forçada de cache. <em>Resultado:</em> Tela branca persistiu. <em>Decisão:</em> Hipótese descartada.</li>
+            <li><strong>Hipótese 2 (Falha de renderização JavaScript pós-deploy):</strong> Testada via inspeção das abas Console e Network do navegador. <em>Resultado:</em> Identificado erro Uncaught TypeError no script principal provocado por resposta 404 Not Found no arquivo /assets/env-config.js. <em>Decisão:</em> Hipótese confirmada com 95% de confiança; decidido escalonar para o N2.</li>
+        </ul>
+
+        <h3>7. Evidências e limitações</h3>
+        <p>Foram reunidas cinco evidências sanitizadas:</p>
+        <ol>
+            <li>Registro de reprodução em navegadores/abas anônimas (Evidência 01).</li>
+            <li>Captura de erros do DevTools mostrando 404 em env-config.js e TypeError (Evidência 02).</li>
+            <li>Consolidação de 18 usuários afetados nos tickets vinculados (Evidência 03).</li>
+            <li>Log sanitizado do servidor web Nginx confirmando a ausência do arquivo (Evidência 04).</li>
+            <li>Captura do DevTools pós-rollback confirmando status 200 OK e carregamento da v3.1.4 (Evidência 05).</li>
+        </ol>
+        <p><strong>Limitações:</strong> Por atuar em ambiente simulado de estudo, os logs e métricas de tempo apresentados são sintéticos e representam o comportamento esperado do ambiente real, sem acesso direto ao código-fonte do pipeline de CI/CD.</p>
+
+        <h3>8. Escalonamento, handoff e contorno, quando aplicáveis</h3>
+        <p>O escalonamento para o N2 foi estritamente necessário pois a correção exigia intervenção no servidor de aplicação/deploy, fora da alçada do N1. O handoff conteve o resumo do impacto, os testes já realizados (evitando retrabalho), os limites de alçada respeitados, a suspeita técnica fundamentada e o horário combinado de retorno (09h00). Como medida de contorno, o N2 executou o rollback autorizado para a versão v3.1.4, eliminando o sintoma imediato em 40 minutos desde a abertura do chamado.</p>
+
+        <h3>9. Solução definitiva ou proposta fundamentada</h3>
+        <ul>
+            <li><strong>Executado:</strong> Rollback para v3.1.4 (contorno definitivo para a indisponibilidade atual).</li>
+            <li><strong>Proposto (para execução pelo N3):</strong> Correção do script de build da v3.2.0 para incluir o arquivo env-config.js, implementação de teste automatizado de integridade de assets (smoke test) antes da liberação do tráfego e reimplantação da v3.2.1 em janela de mudança aprovada com plano de reversão.</li>
+        </ul>
+
+        <h3>10. Validação técnica e confirmação do usuário</h3>
+        <p>Após o rollback, o N2 validou o retorno HTTP 200 dos arquivos estáticos e a ausência de erros no console (Evidência 05). Em seguida, o N1 contatou o solicitante USR-COM-014 e outros dois operadores comerciais às 09h12, os quais testaram o acesso e emitiram um pedido real com sucesso antes do encerramento do ticket.</p>
+
+        <h3>11. Segurança e proteção de dados</h3>
+        <p>Em conformidade com as regras de segurança do projeto, nenhum dado pessoal real, credencial, token de autenticação ou endereço IP público foi incluído neste relatório ou nas evidências. Todos os identificadores de usuários (USR-COM-014), protocolos e logs foram devidamente anonimizados/sanitizados.</p>
+
+        <h3>12. Artigo de conhecimento (KB) ou POP</h3>
+        <p>Foi elaborado o artigo KB-0412 (Triagem e Tratamento de Tela Branca em Aplicações Web Pós-Deploy), padronizando o uso do DevTools (Console/Network) e testes em aba anônima pelo N1 antes de qualquer escalonamento ao N2, reduzindo o tempo médio de diagnóstico em incidentes futuros de implantação.</p>
+
+        <h3>13. Lições aprendidas e melhorias</h3>
+        <ul>
+            <li><strong>Lição técnica:</strong> Em aplicações SPA (Single Page Applications), a ausência de um único arquivo de configuração (404) pode quebrar a execução do JavaScript e gerar tela branca sem mensagem amigável ao usuário.</li>
+            <li><strong>Melhoria de processo:</strong> Recomenda-se incluir uma etapa obrigatória de verificação pós-deploy (checklist de smoke test) pela equipe responsável pela publicação antes do início do expediente comercial.</li>
+        </ul>
+
+        <h3>14. Referências e anexos</h3>
+        <ul>
+            <li>Documentação da Situação de Aprendizagem – SCTEC Aperfeiçoar Suporte de TI [T1] (Atualizado em 19/11/2026).</li>
+            <li>Anexo I: Artefato do Projeto (Abas Documentação, Atendimento, Evidências, Comunicações e KB).</li>
+        </ul>
+    </section>
+
+</main>
+
+<script>
+    function openTab(evt, tabId) {
+        document.querySelectorAll('.tab-content').forEach(function (el) {
+            el.classList.remove('active');
+        });
+        document.querySelectorAll('.tab-btn').forEach(function (btn) {
+            btn.classList.remove('active');
+        });
+        document.getElementById(tabId).classList.add('active');
+        evt.currentTarget.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
